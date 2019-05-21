@@ -18,7 +18,7 @@ namespace TocGenerator
             {
                 var rootFolder = new DirectoryInfo(args[0]);
                 var rootName = rootFolder.Name;
-                var rootPath = PathUtility.MakeRelativePath(AppDomain.CurrentDomain.BaseDirectory, rootFolder.FullName);
+                var rootPath = rootFolder.FullName;
                 var tocPath = args.Length > 1 ? args[1] : Path.Combine(rootPath, "toc.yml");
                 var tocViewModel = TocHelper.GenerateTocFromDirectory(rootPath, rootName);
 
@@ -30,7 +30,6 @@ namespace TocGenerator
 
                 TocHelper.ResolveHref(tocPath, tocViewModel);
                 TocHelper.SortTocItems(tocViewModel);
-                TocHelper.DistinctTocItems(tocViewModel);
                 TocHelper.SaveToc(tocPath, tocViewModel);
 
                 Console.WriteLine($"toc.yml is generated at {tocPath}");

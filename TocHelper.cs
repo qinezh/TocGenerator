@@ -202,12 +202,19 @@ namespace TocGenerator
 
                 var items = (from file in Directory.EnumerateFileSystemEntries(folderPath)
                              let fileName = Path.GetFileNameWithoutExtension(file)
+                             let ext = Path.GetExtension(file)
                              where !string.Equals(fileName, "index", StringComparison.OrdinalIgnoreCase)
-                             where !string.Equals(fileName, "toc", StringComparison.OrdinalIgnoreCase)
-                             select ConvertToTree(file)).ToList();
+                             where ext == "" || string.Equals(".md", ext, StringComparison.OrdinalIgnoreCase)
+                             let item = ConvertToTree(file)
+                             where item != null
+                             select item).ToList();
+
+                if (items.Count == 0)
+                {
+                    return null;
+                }
 
                 node.Items = new TocViewModel(items);
-
                 return node;
             }
 
